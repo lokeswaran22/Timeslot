@@ -2,7 +2,7 @@ services:
   - type: web
     name: timesheet-tracker
     env: node
-    buildCommand: npm install
+    buildCommand: npm install && cd client && npm install && npm run build && cd ..
     startCommand: npm start
     envVars:
       - key: PORT

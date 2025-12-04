@@ -32,14 +32,11 @@ desktop.ini
 *.swo
 *~
 
-# Build outputs
+# Build outputs (but not client/dist which is built on server)
 dist/
 build/
 *.min.js
 *.min.css
-
-# But keep client/dist for deployment
-!client/dist/
 
 # Temporary files
 *.tmp
