@@ -136,11 +136,6 @@ The application supports both SQLite and MySQL:
 4. **Leave** - Full day leave
 5. **Permission** - Partial day permission
 
-## 👥 Default Employees
-
-The system includes predefined employees:
-Anitha, Asha, Aswini, Balaji, Dhivya, Dharma, Jegan, Kamal, Kumaran, Loki, Mani, Nandhini, Sakthi, Sandhiya, Sangeetha, Vivek, Yogesh
-
 ## 🔐 Authentication
 
 - **Login System** - Secure user authentication
@@ -211,7 +206,6 @@ ISC License
 ## 👨‍💻 Developer
 
 **Developed by:** [Trojanx](https://trojanx.in)  
-**For:** [Pristonix](https://pristonix.com)
 
 ## 📧 Support
 
