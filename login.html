@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Timesheet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/jpeg" href="images/logogo.jpg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="overflow-fix.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--royal-gold);
+            border-radius: var(--border-radius-xl);
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: var(--shadow-luxury);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-gold);
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo {
+            margin-bottom: 1rem;
+        }
+
+        .login-title {
+            font-family: var(--font-family);
+            font-size: 2rem;
+            color: var(--royal-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+        }
+
+        .login-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .login-footer a {
+            color: var(--royal-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-logo">
+                <img src="images/logogo.jpg" alt="Pristonix" width="80"
+                    style="border-radius: 50%; border: 2px solid var(--royal-gold);">
+            </div>
+            <h1 class="login-title">Welcome Back</h1>
+            <p class="login-subtitle">Sign in to access the Timesheet Tracker</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" class="form-input" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Sign In</button>
+        </form>
+
+        <div class="login-footer">
+            <p>Don't have an account? <a href="#" id="toggleRegister">Register here</a></p>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const toggleRegister = document.getElementById('toggleRegister');
+        const title = document.querySelector('.login-title');
+        const subtitle = document.querySelector('.login-subtitle');
+        const submitBtn = loginForm.querySelector('button');
+        let isRegistering = false;
+
+        toggleRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+            isRegistering = !isRegistering;
+
+            if (isRegistering) {
+                title.textContent = 'Create Account';
+                subtitle.textContent = 'Register for a new account';
+                submitBtn.textContent = 'Register';
+                toggleRegister.textContent = 'Login here';
+                toggleRegister.parentElement.innerHTML = 'Already have an account? <a href="#" id="toggleRegister">Login here</a>';
+            } else {
+                title.textContent = 'Welcome Back';
+                subtitle.textContent = 'Sign in to access the Timesheet Tracker';
+                submitBtn.textContent = 'Sign In';
+                toggleRegister.textContent = 'Register here';
+                toggleRegister.parentElement.innerHTML = 'Don\'t have an account? <a href="#" id="toggleRegister">Register here</a>';
+            }
+
+            // Re-attach listener since we replaced innerHTML
+            document.getElementById('toggleRegister').addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.reload();
+            });
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const endpoint = isRegistering ? '/api/register' : '/api/login';
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const contentType = res.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await res.text();
+                    console.error('Non-JSON response:', text);
+                    throw new Error('Server returned an invalid response. Please ensure the server is running and updated.');
+                }
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    window.location.href = '/';
+                } else {
+                    alert(data.error || 'Authentication failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred: ' + error.message);
+            }
+        });
+    </script>
+</body>
+
+</html>
