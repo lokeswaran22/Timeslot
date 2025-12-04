@@ -4,7 +4,11 @@
   "description": "A modern, beautiful web application for tracking employee daily hourly activities. This is an upgrade from your Excel-based timesheet system with enhanced features and a premium user interface.",
   "main": "script.js",
   "scripts": {
+    "start": "node server-react-sqlite.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   },
   "keywords": [],
   "author": "",

@@ -495,9 +495,8 @@ app.post('/api/cleanup-employees', async (req, res) => {
     }
 });
 
-// Handle React Routing (SPA) - Catch all other routes and return index.html
-// Handle React Routing (SPA) - Catch all other routes and return index.html
-app.get('*', (req, res) => {
+// Handle React Routing (SPA) - Catch all non-API routes and return index.html
+app.get(/^(?!\/api).*$/, (req, res) => {
     res.sendFile(path.join(__dirname, 'client/dist/index.html'));
 });
 
