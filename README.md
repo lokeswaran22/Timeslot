@@ -1,212 +1,137 @@
-# 📊 Timesheet Tracker
+# Timesheet Management System
 
-A modern, beautiful web application for tracking employee daily hourly activities. Built with React and SQLite/MySQL, featuring a premium user interface with real-time updates, notifications, and comprehensive activity tracking.
+A comprehensive timesheet tracking application for managing employee work hours, activities, and productivity.
 
-![License](https://img.shields.io/badge/license-ISC-blue.svg)
-![Node](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen.svg)
-![React](https://img.shields.io/badge/react-18.x-61dafb.svg)
+## 🚀 Features
 
-## ✨ Features
+- ✅ **Employee Management** - Add, edit, and manage employees
+- ✅ **Time Tracking** - Track work hours across multiple time slots (9 AM - 8 PM)
+- ✅ **Activity Logging** - Record different activity types (Work, Break, Lunch, Leave, Permission)
+- ✅ **Page Tracking** - Track pages done for Proof Reading, Epub, and Calibr processes
+- ✅ **Role-Based Access** - Separate views for Admin and Employee roles
+- ✅ **Excel Export** - Export timesheet data to Excel format
+- ✅ **Activity History** - Track all changes with detailed audit log
+- ✅ **Responsive Design** - Works on desktop and mobile devices
 
-- 🎯 **Employee Management** - Add, edit, and manage employee profiles with email support
-- ⏰ **Hourly Activity Tracking** - Track activities for each hour of the workday (9 AM - 8 PM)
-- 📝 **Multiple Activity Types** - Work, Break, Lunch, Leave, Permission
-- 📄 **Pages Done Tracking** - Track Proof Reading, Epub Process, and Calibrai pages
-- 🔔 **Smart Notifications** - Browser and in-app notifications for timesheet reminders
-- 📊 **Activity History** - Comprehensive activity log with user tracking
-- 📤 **Excel Export** - Export timesheets to Excel format
-- 🎨 **Premium UI** - Royal-themed interface with smooth animations
-- 🔐 **User Authentication** - Secure login system with admin panel
-- ♻️ **Recycle Bin** - Recover deleted activities
-- 📱 **Responsive Design** - Works seamlessly on desktop and mobile
+## 🛠️ Tech Stack
 
-## 🚀 Quick Start
+- **Frontend**: HTML, CSS, JavaScript
+- **Backend**: Node.js, Express
+- **Database**: SQLite
+- **Deployment**: Vercel
 
-### Prerequisites
+## 📦 Installation
 
-- **Node.js** (v14 or higher)
-- **npm** (comes with Node.js)
+```bash
+# Clone the repository
+git clone https://github.com/lokeswaran22/Timesheet-App.git
 
-### Installation
+# Navigate to project directory
+cd Timesheet-App
 
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd time
-   ```
+# Install dependencies
+npm install
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start the application**
-   
-   **Windows:**
-   ```bash
-   .\START.bat
-   ```
-   
-   **Linux/Mac:**
-   ```bash
-   node server-react-sqlite.js
-   ```
-
-4. **Open your browser**
-   ```
-   http://localhost:3000
-   ```
-
-## 📁 Project Structure
-
-```
-time/
-├── client/                 # React frontend (if using React version)
-├── images/                 # Application images and assets
-├── legacy/                 # Legacy code and backups
-├── index.html             # Main HTML file
-├── login.html             # Login page
-├── history.html           # Activity history page
-├── script.js              # Main JavaScript logic
-├── style.css              # Main stylesheet
-├── server-react-sqlite.js # React + SQLite server
-├── server.js              # MySQL server
-├── timesheet.db           # SQLite database
-├── .env                   # Environment configuration
-└── START.bat              # Windows startup script
+# Start the server
+npm start
 ```
 
-## 🗄️ Database Options
+## 🌐 Live Demo
 
-The application supports both SQLite and MySQL:
+Visit: [Your Vercel URL will be here]
 
-### SQLite (Default - Recommended for Quick Start)
-- **Server:** `server-react-sqlite.js`
-- **Database:** `timesheet.db` (auto-created)
-- **No setup required** - Just run and go!
+## 🔐 Login Credentials
 
-### MySQL (For Production)
-- **Server:** `server.js`
-- **Setup:** Configure `.env` file with MySQL credentials
-- **Database:** Auto-creates `timesheet_db`
+### Admin Account
+- Username: `admin`
+- Password: `admin123`
 
-### Database Tables
-- `employees` - Employee information with email
-- `activities` - Daily activity records
-- `deleted_activities` - Recycle bin
-- `users` - User authentication
-- `activity_log` - Activity history tracker
+### Employee Account
+- Username: `autotest`
+- Password: `password`
 
-## 🎨 UI Features
+## 📖 Usage
 
-- **Royal Theme** - Deep navy blue and gold color scheme
-- **Live Clock** - Real-time display in header
-- **Modal Animations** - Smooth popup overlays
-- **Preloader** - Branded loading screen
-- **Glassmorphism** - Modern card designs
-- **Hover Effects** - Interactive button states
+### For Employees:
+1. Login with your credentials
+2. View your personal timesheet
+3. Add activities for different time slots
+4. Track your work progress
 
-## 🔔 Notification System
+### For Administrators:
+1. Login with admin credentials
+2. View all employee timesheets
+3. Add/Edit/Delete employees
+4. Export data to Excel
+5. View activity history
+6. Manage leave and permissions
 
-- **Browser Notifications** - Desktop alerts even when tab is inactive
-- **In-App Notifications** - Visual alerts within the application
-- **Timesheet Reminders** - Automatic prompts at end of time slots
-- **Permission Handling** - Smart notification permission requests
+## 🎯 Time Slots
 
-## 🛠️ Available Scripts
-
-### Start Scripts
-- `START.bat` - Start React + SQLite version (Windows)
-- `start-app.bat` - Alternative startup script
-- `start-react-mysql.bat` - Start React + MySQL version
-- `start-sqlite.bat` - Start SQLite version
-
-### Utility Scripts
-- `add-employees.js` - Add default employees
-- `cleanup-database.js` - Clean up database
-- `reset-database.js` - Reset database to defaults
-- `verify-database.js` - Verify database integrity
-- `generate-sample-data.js` - Generate test data
+The application tracks activities across these time slots:
+- 9:00-10:00
+- 10:00-11:00
+- 11:00-11:10 (Tea Break)
+- 11:10-12:00
+- 12:00-01:00
+- 01:00-01:40 (Lunch)
+- 01:40-03:00
+- 03:00-03:50
+- 03:50-04:00 (Tea Break)
+- 04:00-05:00
+- 05:00-06:00
+- 06:00-07:00
+- 07:00-08:00
 
 ## 📊 Activity Types
 
-1. **Work** - Regular work activities
-2. **Break** - Short breaks
-3. **Lunch** - Lunch break
-4. **Leave** - Full day leave
-5. **Permission** - Partial day permission
+- **Proof Reading** - Track pages proofread
+- **Epub Process** - Track epub conversion pages
+- **Calibr Process** - Track calibr processing pages
+- **Meeting** - Record meeting time
+- **Break** - Tea/coffee breaks
+- **Lunch** - Lunch break
+- **Leave** - Full day or partial leave
+- **Permission** - Permission with reason
+- **Other** - Other activities
 
-## 👥 Default Employees
+## 🚀 Deployment
 
-The system includes predefined employees:
-Anitha, Asha, Aswini, Balaji, Dhivya, Dharma, Jegan, Kamal, Kumaran, Loki, Mani, Nandhini, Sakthi, Sandhiya, Sangeetha, Vivek, Yogesh
+This app is configured for easy deployment on Vercel:
 
-## 🔐 Authentication
-
-- **Login System** - Secure user authentication
-- **Admin Panel** - Administrative controls
-- **User Tracking** - Track who made each edit
-- **Session Management** - Secure session handling
-
-## 📤 Export Features
-
-- **Excel Export** - Export timesheets to `.xlsx` format
-- **Formatted Output** - Professional Excel formatting
-- **Date Range Selection** - Export specific date ranges
-- **Employee Filtering** - Export by employee
-
-## 🛠️ Troubleshooting
-
-### Port Already in Use
 ```bash
-# Change PORT in .env file
-PORT=3001
-```
+# Install Vercel CLI
+npm install -g vercel
 
-### Database Issues
-```bash
-# Reset database
-node reset-database.js
-
-# Verify database
-node verify-database.js
-```
-
-### Module Not Found
-```bash
-# Reinstall dependencies
-npm install
+# Deploy
+vercel --prod
 ```
 
 ## 📝 Environment Variables
 
-Create a `.env` file in the root directory:
-
 ```env
-# Server Configuration
-PORT=3000
-
-# MySQL Configuration (if using MySQL)
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=timesheet_db
+PORT=3005
+NODE_ENV=production
 ```
-
-## 🔄 Version History
-
-- **v1.0** - Initial release with basic timesheet tracking
-- **v2.0** - Added React frontend and MySQL support
-- **v3.0** - Added notifications, activity history, and user authentication
-- **Current** - Royal theme, enhanced UI, and comprehensive features
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-2. Verify all dependencies are installed
-3. Ensure the database is properly initialized
-4. Check that no other application is using port 3000
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 👨‍💻 Author
+
+**Lokeswaran**
+- GitHub: [@lokeswaran22](https://github.com/lokeswaran22)
+
+## 🙏 Acknowledgments
+
+- Built with ❤️ for efficient timesheet management
+- Designed for Pristonix team
 
 ---
 
-**Made with ❤️ for efficient timesheet management**
+**Made with ❤️ by Lokeswaran**

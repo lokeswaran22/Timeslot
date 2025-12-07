@@ -1,0 +1,19 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "server-sqlite.js",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "server-sqlite.js"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "server-sqlite.js"
+        }
+    ]
+}
