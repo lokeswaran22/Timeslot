@@ -9,7 +9,7 @@ A modern, beautiful web application for tracking employee daily hourly activitie
 ## ✨ Features
 
 - 🎯 **Employee Management** - Add, edit, and manage employee profiles with email support
-- ⏰ **Hourly Activity Tracking** - Track activities for each hour of the workday (9 AM - 6 PM)
+- ⏰ **Hourly Activity Tracking** - Track activities for each hour of the workday (9 AM - 8 PM)
 - 📝 **Multiple Activity Types** - Work, Break, Lunch, Leave, Permission
 - 📄 **Pages Done Tracking** - Track Proof Reading, Epub Process, and Calibrai pages
 - 🔔 **Smart Notifications** - Browser and in-app notifications for timesheet reminders
