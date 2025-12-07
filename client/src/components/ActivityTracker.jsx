@@ -132,9 +132,14 @@ function ActivityTracker({ activities, currentDate, onClear, isAdmin }) {
                                 <span className="activity-count">({todayActivities.length})</span>
                             </div>
                             {todayActivities.map((activity, index) => {
+                                console.log('Activity Item:', activity);
                                 const icon = getActivityIcon(activity.activityType);
                                 const actionText = getActionText(activity.action, activity.activityType);
-                                const desc = activity.description || '';
+                                let desc = activity.description || '';
+                                // Clean garbage data if present
+                                if (desc.trim().startsWith('< div') || desc.trim().startsWith('<div')) {
+                                    desc = '';
+                                }
                                 const exactTime = formatExactTime(activity.timestamp || activity.createdAt);
                                 const timeAgo = formatTimeAgo(activity.createdAt || activity.timestamp);
 

@@ -6,7 +6,7 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 
 const app = express();
-const PORT = 3000;
+const PORT = 3005;
 
 // Middleware
 app.use(cors());
@@ -155,14 +155,51 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     try {
-        const user = await get(
+        let user = await get(
             'SELECT * FROM users WHERE username = ? AND password = ?',
             [username, password]
         );
 
         if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
-        res.json({ user: { id: user.id, username: user.username, role: user.role } });
+        // Determine role: admin if username contains 'admin', otherwise 'employee'
+        const role = username.toLowerCase().includes('admin') ? 'admin' : 'employee';
+
+        // Update role if different
+        if (user.role !== role) {
+            await run('UPDATE users SET role = ? WHERE id = ?', [role, user.id]);
+            user.role = role;
+        }
+
+        // Find or create linked employee for non-admin users
+        let employeeId = null;
+        if (role === 'employee') {
+            const employee = await get(
+                'SELECT id FROM employees WHERE name = ?',
+                [username]
+            );
+
+            if (!employee) {
+                // Auto-create employee for this user
+                const empId = username.toLowerCase().replace(/\s+/g, '-');
+                await run(
+                    'INSERT OR IGNORE INTO employees (id, name, email, createdAt) VALUES (?, ?, ?, ?)',
+                    [empId, username, '', new Date().toISOString()]
+                );
+                employeeId = empId;
+            } else {
+                employeeId = employee.id;
+            }
+        }
+
+        res.json({
+            user: {
+                id: user.id,
+                username: user.username,
+                role: user.role,
+                employeeId: employeeId
+            }
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -180,9 +217,11 @@ app.get('/api/employees', async (req, res) => {
 
 // Add/Update employee
 app.post('/api/employees', async (req, res) => {
-    const { id, name, email, createdAt } = req.body;
+    const { id, name, email, createdAt, username, password } = req.body;
 
     try {
+        await run('BEGIN TRANSACTION');
+
         // Check duplicate name
         const existing = await get(
             'SELECT id FROM employees WHERE name = ? AND id != ?',
@@ -190,6 +229,7 @@ app.post('/api/employees', async (req, res) => {
         );
 
         if (existing) {
+            await run('ROLLBACK');
             return res.status(400).json({ error: `Employee "${name}" already exists` });
         }
 
@@ -198,8 +238,29 @@ app.post('/api/employees', async (req, res) => {
             [id, name, email || '', createdAt]
         );
 
-        res.json({ id, name, email, createdAt });
+        // Create/Update User Credential if provided
+        if (username && password) {
+            const role = username.toLowerCase().includes('admin') ? 'admin' : 'employee';
+
+            // Check if username exists
+            const existingUser = await get('SELECT id FROM users WHERE username = ?', [username]);
+
+            if (existingUser) {
+                // Update password for existing user
+                await run('UPDATE users SET password = ?, role = ? WHERE username = ?', [password, role, username]);
+            } else {
+                // Create new user
+                await run(
+                    'INSERT INTO users (username, password, role, createdAt) VALUES (?, ?, ?, ?)',
+                    [username, password, role, new Date().toISOString()]
+                );
+            }
+        }
+
+        await run('COMMIT');
+        res.json({ id, name, email, createdAt, username });
     } catch (err) {
+        await run('ROLLBACK');
         res.status(500).json({ error: err.message });
     }
 });
@@ -276,7 +337,7 @@ app.post('/api/activities', async (req, res) => {
             INSERT OR REPLACE INTO activities (dateKey, employeeId, timeSlot, type, description, totalPages, pagesDone, timestamp)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `, [dateKey, employeeId, timeSlot, type, description, totalPages, pagesDone, timestamp]);
-        
+
         res.json({ status: 'saved' });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -448,6 +509,16 @@ app.post('/api/cleanup-employees', async (req, res) => {
         await run('ROLLBACK');
         res.status(500).json({ error: err.message });
     }
+});
+
+// Serve login page
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+// Serve main page (SPA catch-all)
+app.use((req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Start Server

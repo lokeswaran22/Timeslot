@@ -20,6 +20,7 @@
             justify-content: center;
             min-height: 100vh;
             padding: 1rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
 
         .login-card {
@@ -33,6 +34,7 @@
             box-shadow: var(--shadow-luxury);
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
         }
 
         .login-card::before {
@@ -67,21 +69,65 @@
             color: var(--text-secondary);
         }
 
+        /* Role Tabs */
+        .role-tabs {
+            display: flex;
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 2rem;
+        }
+
+        .role-tab {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .role-tab.active {
+            background: white;
+            color: var(--royal-blue);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .role-tab.active.admin-tab {
+            color: var(--royal-gold);
+            /* Gold for Admin */
+        }
+
+        /* Forgot Password */
+        .forgot-password {
+            display: block;
+            text-align: right;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--royal-blue);
+            text-decoration: none;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
         .login-footer {
-            margin-top: 1.5rem;
+            margin-top: 2rem;
             text-align: center;
             font-size: 0.9rem;
             color: var(--text-secondary);
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
         }
 
-        .login-footer a {
-            color: var(--royal-blue);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .login-footer a:hover {
-            text-decoration: underline;
+        /* Admin Mode Styling */
+        body.admin-mode .login-card {
+            border-color: var(--royal-gold);
+            box-shadow: 0 20px 40px -10px rgba(212, 175, 55, 0.3);
         }
     </style>
 </head>
@@ -94,7 +140,13 @@
                     style="border-radius: 50%; border: 2px solid var(--royal-gold);">
             </div>
             <h1 class="login-title">Welcome Back</h1>
-            <p class="login-subtitle">Sign in to access the Timesheet Tracker</p>
+            <p class="login-subtitle" id="loginSubtitle">Please sign in to continue</p>
+        </div>
+
+        <!-- Role Tabs -->
+        <div class="role-tabs">
+            <button class="role-tab active" data-role="employee">Employee Login</button>
+            <button class="role-tab admin-tab" data-role="admin">Admin Login</button>
         </div>
 
         <form id="loginForm">
@@ -106,55 +158,72 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
             </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Sign In</button>
+
+            <a href="#" class="forgot-password" id="forgotPasswordBtn">Forgot Password?</a>
+            <br>
+
+            <button type="submit" class="btn btn-primary" id="loginBtn" style="width: 100%; justify-content: center;">
+                Login as Employee
+            </button>
         </form>
 
         <div class="login-footer">
-            <p>Don't have an account? <a href="#" id="toggleRegister">Register here</a></p>
+            <p>Protected by Pristonix Security</p>
         </div>
     </div>
 
+    <!-- Forgot Password Modal (Simple Alert for implementation simplicity) -->
+
     <script>
         const loginForm = document.getElementById('loginForm');
-        const toggleRegister = document.getElementById('toggleRegister');
-        const title = document.querySelector('.login-title');
-        const subtitle = document.querySelector('.login-subtitle');
-        const submitBtn = loginForm.querySelector('button');
-        let isRegistering = false;
+        const roleTabs = document.querySelectorAll('.role-tab');
+        const loginBtn = document.getElementById('loginBtn');
+        const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+        let currentRole = 'employee';
 
-        toggleRegister.addEventListener('click', (e) => {
-            e.preventDefault();
-            isRegistering = !isRegistering;
+        // Tab Switching Logic
+        roleTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all
+                roleTabs.forEach(t => t.classList.remove('active'));
 
-            if (isRegistering) {
-                title.textContent = 'Create Account';
-                subtitle.textContent = 'Register for a new account';
-                submitBtn.textContent = 'Register';
-                toggleRegister.textContent = 'Login here';
-                toggleRegister.parentElement.innerHTML = 'Already have an account? <a href="#" id="toggleRegister">Login here</a>';
-            } else {
-                title.textContent = 'Welcome Back';
-                subtitle.textContent = 'Sign in to access the Timesheet Tracker';
-                submitBtn.textContent = 'Sign In';
-                toggleRegister.textContent = 'Register here';
-                toggleRegister.parentElement.innerHTML = 'Don\'t have an account? <a href="#" id="toggleRegister">Register here</a>';
-            }
+                // Add active to clicked
+                tab.classList.add('active');
 
-            // Re-attach listener since we replaced innerHTML
-            document.getElementById('toggleRegister').addEventListener('click', (e) => {
-                e.preventDefault();
-                window.location.reload();
+                // Update State
+                currentRole = tab.dataset.role;
+
+                // Update UI
+                if (currentRole === 'admin') {
+                    document.body.classList.add('admin-mode');
+                    loginBtn.textContent = 'Login as Admin';
+                    loginBtn.style.background = 'linear-gradient(135deg, #d4af37 0%, #aa8c2c 100%)'; // Gold for Admin
+                } else {
+                    document.body.classList.remove('admin-mode');
+                    loginBtn.textContent = 'Login as Employee';
+                    loginBtn.style.background = ''; // Revert to default primary
+                }
             });
         });
 
+        // Forgot Password Logic
+        forgotPasswordBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentRole === 'admin') {
+                alert('Admin Account Recovery:\n\nPlease contact the IT Department or Database Master to reset your administrative credentials.');
+            } else {
+                alert('Employee Account Recovery:\n\nPlease contact your System Administrator to reset your password.\n\nAdmin can update your password from the "Edit Employee" menu.');
+            }
+        });
+
+        // Login Submission
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const endpoint = isRegistering ? '/api/register' : '/api/login';
 
             try {
-                const res = await fetch(endpoint, {
+                const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
@@ -164,13 +233,31 @@
                 if (!contentType || !contentType.includes('application/json')) {
                     const text = await res.text();
                     console.error('Non-JSON response:', text);
-                    throw new Error('Server returned an invalid response. Please ensure the server is running and updated.');
+                    throw new Error('Server returned an invalid response.');
                 }
 
                 const data = await res.json();
 
                 if (res.ok) {
-                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    const user = data.user;
+
+                    // STRICT ROLE ENFORCEMENT
+                    if (currentRole === 'employee' && user.role === 'admin') {
+                        alert('⚠️ Admin Access Detected\n\nPlease use the "Admin Login" tab to sign in with an administrator account.');
+                        // Switch tab for them automatically for better UX
+                        document.querySelector('[data-role="admin"]').click();
+                        return;
+                    }
+
+                    if (currentRole === 'admin' && user.role !== 'admin') {
+                        alert('⛔ Access Denied\n\nThis account does not have Administrator privileges.\nPlease use the "Employee Login" tab.');
+                        // Switch tab for them automatically
+                        document.querySelector('[data-role="employee"]').click();
+                        return;
+                    }
+
+                    // Login Successful
+                    localStorage.setItem('currentUser', JSON.stringify(user));
                     window.location.href = '/';
                 } else {
                     alert(data.error || 'Authentication failed');

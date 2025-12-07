@@ -203,6 +203,7 @@ function Dashboard() {
     };
 
     const deleteEmployee = (id) => {
+        console.log('deleteEmployee called with ID:', id);
         setConfirmModal({
             show: true,
             title: 'Delete Employee',
