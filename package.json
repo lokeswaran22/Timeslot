@@ -1,0 +1,25 @@
+{
+  "name": "ts",
+  "version": "1.0.0",
+  "description": "A modern, beautiful web application for tracking employee daily hourly activities. This is an upgrade from your Excel-based timesheet system with enhanced features and a premium user interface.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "build": "npm install && npm install --prefix client && npm run build --prefix client",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "xlsx": "^0.18.5"
+  }
+}
